@@ -56,13 +56,16 @@
 </script>
 
 {#if isOpen}
-  <button aria-label="Close settings" class="fixed inset-0" onclick={onClose}
+  <button
+    aria-label="Close settings"
+    class="fixed inset-0 z-40"
+    onclick={onClose}
   ></button>
 {/if}
 {#if render}
   <div
     style="top: calc(100% + 2.5px);"
-    class="rounded p-2 dark:bg-neutral-800 bg-neutral-100 shadow absolute right-0 transition-all duration-150 ease-out {!animate &&
+    class="rounded p-2 dark:bg-neutral-800 bg-neutral-100 shadow absolute z-50 right-0 transition-all duration-150 ease-out {!animate &&
       'opacity-0 scale-93 blur-xs pointer-events-none'}"
   >
     <div class="flex justify-center items-center gap-2">
