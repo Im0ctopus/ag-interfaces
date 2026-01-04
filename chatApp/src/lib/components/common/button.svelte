@@ -22,7 +22,7 @@
 
   const variants: { [key: string]: ClassNameValue } = {
     default: '',
-    icon: 'p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800',
+    icon: 'p-1.5 hover:bg-neutral-900/5 dark:hover:bg-neutral-100/10',
   }
 
   // Default className
