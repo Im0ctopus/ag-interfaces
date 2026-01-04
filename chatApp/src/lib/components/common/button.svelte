@@ -9,6 +9,7 @@
   type Props = HTMLButtonAttributes &
     HTMLAnchorAttributes & {
       variant?: 'icon' | 'default'
+      fullWidth?: boolean
     }
 
   let {
@@ -17,13 +18,14 @@
     href = undefined,
     disabled,
     children,
+    fullWidth = false,
     ...rest
   }: Props = $props()
 
-  const variants: { [key: string]: ClassNameValue } = {
-    default: '',
+  let variants: { [key: string]: ClassNameValue } = $derived({
+    default: `${fullWidth && 'w-full'}`,
     icon: 'p-1.5 hover:bg-neutral-900/5 dark:hover:bg-neutral-100/10',
-  }
+  })
 
   // Default className
   const className = 'active:scale-97 transition-all duration-150 rounded'

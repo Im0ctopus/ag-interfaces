@@ -13,6 +13,7 @@
     value = $bindable(),
     'data-slot': dataSlot = 'input',
     variant = 'default',
+    ...rest
   }: Props = $props()
 
   const className = 'px-2 py-1 rounded outline-none text-sm font-semibold'
@@ -34,6 +35,7 @@
       data-slot={dataSlot}
       bind:value
       class={twm(className, 'py-2 shrink-0 pr-7 ', customClassName)}
+      {...rest}
     />
     {#if value.length > 0}
       <Button
@@ -50,5 +52,6 @@
     data-slot={dataSlot}
     bind:value
     class={twm(className, 'bg-neutral-950/5 dark:bg-white/5', customClassName)}
+    {...rest}
   />
 {/if}
