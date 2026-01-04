@@ -65,13 +65,13 @@
 {#if render}
   <div
     style="top: calc(100% + 2.5px);"
-    class="rounded p-2 dark:bg-neutral-800 bg-neutral-100 shadow absolute z-50 right-0 transition-all duration-150 ease-out {!animate &&
+    class="rounded p-2 dark:bg-neutral-900 bg-neutral-100 shadow absolute z-50 right-0 transition-all duration-150 ease-out {!animate &&
       'opacity-0 scale-93 blur-xs pointer-events-none'}"
   >
     <div class="flex justify-center items-center gap-2">
       <p class="text-sm font-semibold">Theme</p>
       <div
-        class="relative flex justify-center items-center gap-1 bg-white dark:bg-neutral-900 rounded p-1"
+        class="relative flex justify-center items-center gap-1 bg-white dark:bg-neutral-950 rounded p-1"
       >
         <Button
           variant="icon"
