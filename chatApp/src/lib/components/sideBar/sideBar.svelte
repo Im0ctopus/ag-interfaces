@@ -23,7 +23,6 @@
   let agents: Agent[] = JSON.parse(PUBLIC_AGENTS)
 
   let search = $state('')
-  // TODO: this selected should be defaulted and should come from the localStorage
   let selected: string | null = $state(null)
 
   $effect(() => {
@@ -44,6 +43,8 @@
   })
 
   const onSelect = (val: string) => {
+    if (selected === val) return
+
     selected = val
     localStorage.agent = selected
   }
