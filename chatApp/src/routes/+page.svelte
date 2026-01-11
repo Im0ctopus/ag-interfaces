@@ -14,6 +14,8 @@
   })
 
   $effect(() => {
+    if (!browser) return
+
     const getAgentHealth = async () => {
       try {
         const res = await fetch(`${PUBLIC_AGENT_URL}/healthz`)

@@ -9,7 +9,7 @@
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <main
-  class="antialiased min-h-screen relative flex gap-0 justify-start items-start bg-neutral-100 dark:bg-neutral-900"
+  class="antialiased min-h-screen relative flex gap-0 justify-start items-start text-neutral-800 dark:text-neutral-100 bg-neutral-100 dark:bg-neutral-900"
 >
   <Nav />
   {@render children()}

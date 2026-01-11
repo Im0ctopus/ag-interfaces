@@ -28,7 +28,8 @@
   })
 
   // Default className
-  const className = 'active:scale-97 transition-all duration-150 rounded'
+  const className =
+    'active:scale-97 transition-all duration-150 rounded disabled:opacity-50 disabled:cursor-not-allowed'
 </script>
 
 {#if href}

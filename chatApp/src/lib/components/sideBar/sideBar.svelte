@@ -32,6 +32,7 @@
   let search = $state('')
 
   $effect(() => {
+    if (!browser) return
     if ((!agents || agents.length <= 1) && isOpen) toggleOpen()
     if (!agents)
       throw new Error('No agents found in environment variable PUBLIC_AGENTS')
@@ -42,10 +43,8 @@
     const agent: string = localStorage.agent
     if (!agents.find((a) => a.id === agent)) {
       agents[0].id
-      throw new Error('Saved agent not found in agents list')
-    }
-
-    selected = agent
+      console.error('Saved agent not found in agents list')
+    } else selected = agent
   })
 
   const onSelect = (val: string) => {
