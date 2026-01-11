@@ -6,7 +6,7 @@
 </script>
 
 <script lang="ts">
-  import { PanelLeft } from 'lucide-svelte'
+  import { PanelLeftClose, PanelLeftOpen } from 'lucide-svelte'
   import Button from '../common/button.svelte'
   import Input from '../common/input.svelte'
   import AgentList from './agentList.svelte'
@@ -16,14 +16,20 @@
   type Props = {
     isOpen: boolean
     toggleOpen: () => void
+    agentStatus: string[] | null | undefined
+    selected: string | null
   }
 
-  let { isOpen, toggleOpen }: Props = $props()
+  let {
+    isOpen,
+    toggleOpen,
+    agentStatus,
+    selected = $bindable(),
+  }: Props = $props()
 
   let agents: Agent[] = JSON.parse(PUBLIC_AGENTS)
 
   let search = $state('')
-  let selected: string | null = $state(null)
 
   $effect(() => {
     if ((!agents || agents.length <= 1) && isOpen) toggleOpen()
@@ -56,7 +62,17 @@
     class="absolute z-20 left-3 top-5"
     onclick={toggleOpen}
   >
-    <PanelLeft size="1.25rem" />
+    <!-- TODO: cool transition in these -->
+    <PanelLeftClose
+      size="1.25rem"
+      class="absolute transition-[opacity,scale,filter] duration-300 ease-out {!isOpen &&
+        'opacity-0 scale-75 blur-xs'}"
+    />
+    <PanelLeftOpen
+      size="1.25rem"
+      class="transition-[opacity,scale,filter] duration-300 ease-out {isOpen &&
+        'opacity-0 scale-75 blur-xs'}"
+    />
   </Button>
 
   <!-- TODO: mobile layout needs to be "full" -->
@@ -70,7 +86,7 @@
     >
       <p class="px-7.5 w-full text-center text-xl font-semibold">Agents</p>
       <Input variant="search" bind:value={search} />
-      <AgentList {onSelect} {search} {selected} {agents} />
+      <AgentList {onSelect} {search} {selected} {agents} {agentStatus} />
     </div>
   </div>
 {/if}
