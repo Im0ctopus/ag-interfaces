@@ -23,9 +23,9 @@
   {#each showAgents as { id, name }, index (index)}
     <button
       onclick={() => onSelect(id)}
-      class="w-full rounded px-3.5 pr-8.5 relative py-2.5 text-start text-sm font-semibold transition-all truncate {selected ===
+      class="w-full rounded px-3.5 pr-8.5 relative py-2.5 text-start text-sm font-semibold transition-all duration-150 ease-out truncate {selected ===
       id
-        ? 'bg-neutral-800 text-white dark:text-neutral-900 dark:bg-white'
+        ? 'bg-neutral-800 text-neutral-100 dark:text-neutral-800 dark:bg-neutral-100'
         : 'cursor-pointer hover:bg-white dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 active:scale-98'}"
     >
       {name}
@@ -33,20 +33,31 @@
         {#if agentStatus === undefined}
           <Loader size="1rem" class="animate-spin" />
         {:else if agentStatus === null || !agentStatus.includes(id)}
-          <div class="p-0.75 bg-red-500/30 rounded-full">
-            <X size="0.75rem" class="text-red-500" />
+          <div
+            class="p-0.75 transition-colors duration-150 ease-out {selected ===
+            id
+              ? 'dark:bg-neutral-800 bg-neutral-100'
+              : 'bg-neutral-800 dark:bg-neutral-100'} rounded-full"
+          >
+            <X
+              size="0.75rem"
+              class="transition-colors duration-150 ease-out {selected === id
+                ? 'dark:text-neutral-100 text-neutral-800'
+                : 'text-neutral-100 dark:text-neutral-800'}"
+            />
           </div>
         {:else}
           <div
-            class="p-0.75 rounded-full transition-colors {selected === id
-              ? 'bg-green-500/50'
-              : 'bg-green-500/40'}"
+            class="p-0.75 rounded-full transition-colors duration-150 ease-out {selected ===
+            id
+              ? 'dark:bg-neutral-800 bg-neutral-100'
+              : 'bg-neutral-800 dark:bg-neutral-100'}"
           >
             <Check
               size="0.75rem"
-              class="transition-colors {selected === id
-                ? 'dark:text-green-600 text-green-500'
-                : 'text-green-600'}"
+              class="transition-colors duration-150 ease-out {selected === id
+                ? 'dark:text-neutral-100 text-neutral-800'
+                : 'text-neutral-100 dark:text-neutral-800'}"
             />
           </div>
         {/if}
