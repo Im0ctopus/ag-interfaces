@@ -37,12 +37,10 @@
   }
 </script>
 
-<div
-  class="flex justify-center items-start min-h-screen w-screen overflow-clip"
->
+<div class="flex justify-center items-start min-h-screen w-full overflow-clip">
   <SideBar isOpen={isSideOpen} {toggleOpen} {agentStatus} bind:selected />
   <div
-    class="grow outline overflow-clip self-stretch shrink-0 min-w-0 bg-white dark:bg-neutral-800 transition-[margin-top,border-top-left-radius,outline-color] duration-150 ease-out {isSideOpen
+    class="grow outline overflow-clip self-stretch min-w-0 bg-white dark:bg-neutral-800 transition-[margin-top,border-top-left-radius,outline-color] duration-150 ease-out {isSideOpen
       ? 'mt-3 rounded-tl-xl dark:outline-neutral-700 outline-neutral-200 shadow'
       : 'outline-transparent'}"
   >

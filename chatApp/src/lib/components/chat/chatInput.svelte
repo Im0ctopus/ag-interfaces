@@ -1,13 +1,14 @@
 <script lang="ts">
-  import { ArrowUp } from 'lucide-svelte'
+  import { ArrowUp, Square } from 'lucide-svelte'
   import Button from '../common/button.svelte'
 
   type Props = {
     onSend: (value: string) => void
     isAvailable: boolean | undefined
+    isLoading: boolean
   }
 
-  let { onSend, isAvailable }: Props = $props()
+  let { onSend, isAvailable, isLoading = $bindable() }: Props = $props()
 
   let value = $state('')
 
@@ -17,10 +18,25 @@
 
   const onSendClick = (e: MouseEvent) => {
     e.stopPropagation()
+    if (isLoading) isLoading = false
+    else {
+      onSend(value.trim())
+      value = ''
+    }
+  }
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    const key = e.key
+    if (key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      if (value.trim() === '' || !isAvailable) return
+      onSend(value.trim())
+      value = ''
+    }
   }
 </script>
 
-<div class="w-full max-w-3xl mx-auto">
+<div class="w-full md:max-w-3xl mx-auto">
   {#if isAvailable === false}
     <p class="text-xs dark:text-red-400 font-semibold text-red-500 mb-1">
       This agent is currently unavailable.
@@ -32,6 +48,7 @@
       Checking agent availability...
     </p>
   {/if}
+
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
@@ -40,21 +57,29 @@
   >
     <!-- svelte-ignore a11y_autofocus -->
     <textarea
+      onkeydown={onKeyDown}
       bind:value
       placeholder="Type your message here..."
       bind:this={textArea}
       autocomplete="off"
       autofocus
-      class="w-full min-h-12 max-h-42 resize-none font-semibold field-sizing-content outline-0"
+      class="w-full min-h-12 max-h-42 resize-none font-semibold field-sizing-content outline-0 min-w-0"
     ></textarea>
     <div class="w-full flex justify-end items-center">
       <Button
-        disabled={value.trim() === '' || !isAvailable}
+        disabled={!isLoading && (value.trim() === '' || !isAvailable)}
         onclick={onSendClick}
         variant="icon"
         class="dark:bg-neutral-800 bg-neutral-200 hover:bg-neutral-300"
       >
-        <ArrowUp size="1.25rem" />
+        {#if isLoading}
+          <Square
+            size="1.25rem"
+            class="dark:fill-neutral-100 fill-neutral-800"
+          />
+        {:else}
+          <ArrowUp size="1.25rem" />
+        {/if}
       </Button>
     </div>
   </div>
