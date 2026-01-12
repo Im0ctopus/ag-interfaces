@@ -46,20 +46,6 @@
                 : 'text-neutral-100 dark:text-neutral-800'}"
             />
           </div>
-        {:else}
-          <div
-            class="p-0.75 rounded-full transition-colors duration-150 ease-out {selected ===
-            id
-              ? 'dark:bg-neutral-800 bg-neutral-100'
-              : 'bg-neutral-800 dark:bg-neutral-100'}"
-          >
-            <Check
-              size="0.75rem"
-              class="transition-colors duration-150 ease-out {selected === id
-                ? 'dark:text-neutral-100 text-neutral-800'
-                : 'text-neutral-100 dark:text-neutral-800'}"
-            />
-          </div>
         {/if}
       </div>
     </button>

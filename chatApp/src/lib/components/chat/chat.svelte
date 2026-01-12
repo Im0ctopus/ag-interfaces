@@ -3,46 +3,52 @@
   import ChatInput from './chatInput.svelte'
   import { PUBLIC_AGENT_URL } from '$env/static/public'
   import { browser } from '$app/environment'
+  import {
+    getAgentMessages,
+    setAgentMessages,
+  } from '$lib/utils/locaStorageHandler'
 
   type Props = {
     selected: string | null
     isAvailable: boolean | undefined
   }
 
-  let messageList: Message[] = $state([])
+  let { isAvailable, selected }: Props = $props()
+
+  let messageList: { [key: string]: Message[] } = $state({})
   let isLoading: boolean = $state(false)
   let isResponding: boolean = $state(false)
   let error: string | null = $state(null)
 
-  let { isAvailable, selected }: Props = $props()
+  let showMessages: Message[] = $derived(!selected ? [] : messageList[selected])
 
   $effect(() => {
-    if (!browser || !selected) return
+    if (!browser) return
 
-    const messagesString = localStorage[selected]
-    if (!messagesString) messageList = []
-    else {
-      const messages = JSON.parse(messagesString)
-      messageList = messages
-    }
+    const messages = getAgentMessages()
+    if (!messages) messageList = {}
+    else messageList = messages
   })
 
   const onSend = async (value: string) => {
     if (!selected) return
+    const agentId = selected
     try {
       error = null
       isLoading = true
 
-      messageList.push({
-        id: messageList.length,
+      if (!messageList[agentId]) messageList[agentId] = []
+
+      messageList[agentId].push({
+        id: messageList[agentId].length,
         content: value,
         role: 'user',
       })
-      localStorage[selected] = JSON.stringify(messageList)
+      setAgentMessages(messageList)
 
       const body = JSON.stringify({
-        projectId: selected,
-        messages: messageList,
+        projectId: agentId,
+        messages: messageList[agentId],
       })
 
       const options: RequestInit = {
@@ -56,8 +62,8 @@
       const res = await fetch(`${PUBLIC_AGENT_URL}/agent/ask-stream`, options)
       if (!res.ok || !res.body) throw new Error('Network response was not ok')
 
-      const newId = messageList.length
-      messageList.push({
+      const newId = messageList[agentId].length
+      messageList[agentId].push({
         id: newId,
         content: '',
         role: 'assistant',
@@ -72,7 +78,7 @@
         if (done || !isLoading) break
 
         buffer += decoder.decode(value, { stream: true })
-        const lines = buffer.split('\n')
+        const lines = buffer.split('\n\n')
         buffer = lines.pop() || ''
 
         for (const line of lines) {
@@ -87,7 +93,7 @@
 
             if (message) {
               isResponding = true
-              messageList[messageList.length - 1].content += message
+              messageList[agentId][newId - 1].content += message
             }
             // TODO: show action on the frontend like the one from google
             // TODO: verify if the finishing reason is ERROR
@@ -99,7 +105,7 @@
 
       isLoading = false
       isResponding = false
-      localStorage[selected] = JSON.stringify(messageList)
+      setAgentMessages(messageList)
     } catch (e) {
       console.error(e)
       error = 'An error occurred, please try again.'
@@ -111,7 +117,7 @@
 
 <div class="w-full md:max-w-5xl mx-auto h-full px-3 flex flex-col">
   <div class="grow min-h-0 w-full">
-    {#each messageList as message}
+    {#each showMessages as message}
       <p>{message.content}</p>
     {/each}
     <!-- TODO: messages list -->

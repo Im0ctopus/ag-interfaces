@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { twm } from '$lib/utils'
+  import { twm } from '$lib/utils/index'
   import {
     type HTMLButtonAttributes,
     type HTMLAnchorAttributes,

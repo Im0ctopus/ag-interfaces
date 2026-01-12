@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { twm } from '$lib/utils'
+  import { twm } from '$lib/utils/index'
   import { Search, X } from 'lucide-svelte'
   import { type HTMLInputAttributes } from 'svelte/elements'
   import Button from './button.svelte'

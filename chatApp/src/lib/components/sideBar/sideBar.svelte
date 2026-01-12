@@ -61,7 +61,6 @@
     class="absolute z-20 left-3 top-5"
     onclick={toggleOpen}
   >
-    <!-- TODO: cool transition in these -->
     <PanelLeftClose
       size="1.25rem"
       class="absolute transition-[opacity,scale,filter] duration-300 ease-out {!isOpen &&
