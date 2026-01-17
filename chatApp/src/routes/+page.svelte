@@ -49,23 +49,19 @@
   }
 
   const newUnreadMessage = (agentId: string) => {
-    const agentToUpdate = agents.find((a) => a.id === agentId)
-    if (!agentToUpdate) return
-    agentToUpdate.newMessage = true
-
-    agents = [...agents.filter((a) => a.id !== agentId), agentToUpdate]
+    const agentToUpdate = agents.findIndex((a) => a.id === agentId)
+    if (agentToUpdate === -1) return
+    agents[agentToUpdate].newMessage = true
   }
 
   const markAsRead = (agentId: string) => {
-    const agentToUpdate = agents.find((a) => a.id === agentId)
-    if (!agentToUpdate) return
-    agentToUpdate.newMessage = false
-
-    agents = [...agents.filter((a) => a.id !== agentId), agentToUpdate]
+    const agentToUpdate = agents.findIndex((a) => a.id === agentId)
+    if (agentToUpdate === -1) return
+    agents[agentToUpdate].newMessage = false
   }
 </script>
 
-<div class="flex justify-center items-start min-h-screen w-full overflow-clip">
+<div class="flex justify-center items-start h-screen w-full overflow-clip">
   <SideBar
     isOpen={isSideOpen}
     {toggleOpen}
@@ -75,7 +71,7 @@
     {markAsRead}
   />
   <div
-    class="grow outline overflow-clip self-stretch min-w-0 bg-white dark:bg-neutral-800 transition-[margin-top,border-top-left-radius,outline-color] duration-150 ease-out {isSideOpen
+    class="grow outline self-stretch min-w-0 bg-white dark:bg-neutral-800 transition-[margin-top,border-top-left-radius,outline-color] duration-150 ease-out {isSideOpen
       ? 'mt-3 rounded-tl-xl dark:outline-neutral-700 outline-neutral-200 shadow'
       : 'outline-transparent'}"
   >

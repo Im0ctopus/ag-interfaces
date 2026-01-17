@@ -56,7 +56,7 @@
 {#if agents.length > 1}
   <Button
     variant="icon"
-    class="absolute z-20 left-3 top-5"
+    class="absolute z-20 left-3 top-3.5"
     onclick={toggleOpen}
   >
     <PanelLeftClose
@@ -82,9 +82,7 @@
       ? 'max-w-64'
       : 'max-w-0'}"
   >
-    <div
-      class="flex flex-col justify-start items-center gap-3 w-64 pt-5.5 px-3"
-    >
+    <div class="flex flex-col justify-start items-center gap-3 w-64 pt-4 px-3">
       <p class="px-7.5 w-full text-center text-xl font-semibold">Agents</p>
       <Input variant="search" bind:value={search} />
       <AgentList {onSelect} {search} {selected} {agents} {agentStatus} />

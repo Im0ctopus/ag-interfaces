@@ -64,7 +64,7 @@
 {/if}
 {#if render}
   <div
-    style="top: calc(100% + 2.5px);"
+    style="top: calc(100% + 1.5px);"
     class="rounded p-2 dark:bg-neutral-900 bg-neutral-100 shadow absolute z-50 right-0 transition-all duration-150 ease-out {!animate &&
       'opacity-0 scale-93 blur-xs pointer-events-none'}"
   >
