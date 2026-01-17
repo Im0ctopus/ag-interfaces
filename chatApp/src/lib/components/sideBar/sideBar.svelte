@@ -1,23 +1,19 @@
-<script lang="ts" module>
-  export type Agent = {
-    id: string
-    name: string
-  }
-</script>
-
 <script lang="ts">
   import { PanelLeftClose, PanelLeftOpen } from 'lucide-svelte'
   import Button from '../common/button.svelte'
   import Input from '../common/input.svelte'
   import AgentList from './agentList.svelte'
-  import { PUBLIC_AGENTS } from '$env/static/public'
   import { browser } from '$app/environment'
+  import { type Agent } from '../../../routes/+page.svelte'
+  import Ping from '../common/ping.svelte'
 
   type Props = {
     isOpen: boolean
     toggleOpen: () => void
     agentStatus: string[] | null | undefined
     selected: string | null
+    agents: Agent[]
+    markAsRead: (agentId: string) => void
   }
 
   let {
@@ -25,9 +21,9 @@
     toggleOpen,
     agentStatus,
     selected = $bindable(),
+    agents,
+    markAsRead,
   }: Props = $props()
-
-  let agents: Agent[] = JSON.parse(PUBLIC_AGENTS)
 
   let search = $state('')
 
@@ -47,11 +43,13 @@
     } else selected = agent
   })
 
-  const onSelect = (val: string) => {
+  const onSelect = (val: string, newMessage: boolean) => {
     if (selected === val) return
 
     selected = val
     localStorage.agent = selected
+
+    if (newMessage) markAsRead(val)
   }
 </script>
 
@@ -71,6 +69,11 @@
       class="transition-[opacity,scale,filter] duration-300 ease-out {isOpen &&
         'opacity-0 scale-75 blur-xs'}"
     />
+    {#if !isOpen && agents.find((a) => a.newMessage)}
+      <div class="absolute top-1 right-1">
+        <Ping />
+      </div>
+    {/if}
   </Button>
 
   <!-- TODO: mobile layout needs to be "full" -->

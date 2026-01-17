@@ -11,9 +11,10 @@
   type Props = {
     selected: string | null
     isAvailable: boolean | undefined
+    newUnreadMessage: (agentId: string) => void
   }
 
-  let { isAvailable, selected }: Props = $props()
+  let { isAvailable, selected, newUnreadMessage }: Props = $props()
 
   let messageList: { [key: string]: Message[] } = $state({})
   let isLoading: boolean = $state(false)
@@ -93,6 +94,9 @@
 
             if (message) {
               isResponding = true
+              if (agentId !== selected && !isResponding)
+                newUnreadMessage(agentId)
+
               messageList[agentId][newId - 1].content += message
             }
             // TODO: show action on the frontend like the one from google
@@ -102,6 +106,8 @@
           }
         }
       }
+
+      if (agentId !== selected) newUnreadMessage(agentId)
 
       isLoading = false
       isResponding = false
@@ -116,7 +122,7 @@
 </script>
 
 <div class="w-full md:max-w-5xl mx-auto h-full px-3 flex flex-col">
-  <div class="grow min-h-0 w-full">
+  <div class="grow min-h-0 w-full py-2">
     {#each showMessages as message}
       <p>{message.content}</p>
     {/each}

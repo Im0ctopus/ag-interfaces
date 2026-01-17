@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { Check, Loader, X } from 'lucide-svelte'
-  import { type Agent } from './sideBar.svelte'
+  import { Loader, X } from 'lucide-svelte'
+  import { type Agent } from '../../../routes/+page.svelte'
+  import Ping from '../common/ping.svelte'
 
   type Props = {
     search: string
     selected: string | null
-    onSelect: (val: string) => void
+    onSelect: (val: string, newMessage: boolean) => void
     agents: Agent[]
     agentStatus: string[] | null | undefined
   }
@@ -14,15 +15,15 @@
 
   let showAgents = $derived(
     agents.filter((ag) =>
-      ag.name.toLowerCase().trim().includes(search.toLowerCase().trim())
-    )
+      ag.name.toLowerCase().trim().includes(search.toLowerCase().trim()),
+    ),
   )
 </script>
 
 <div class="flex flex-col just-center items-center gap-2 w-full">
-  {#each showAgents as { id, name }, index (index)}
+  {#each showAgents as { id, name, newMessage }, index (index)}
     <button
-      onclick={() => onSelect(id)}
+      onclick={() => onSelect(id, newMessage)}
       class="w-full rounded px-3.5 pr-8.5 relative py-2.5 text-start text-sm font-semibold transition-all duration-150 ease-out truncate {selected ===
       id
         ? 'bg-neutral-800 text-neutral-100 dark:text-neutral-800 dark:bg-neutral-100'
@@ -46,6 +47,8 @@
                 : 'text-neutral-100 dark:text-neutral-800'}"
             />
           </div>
+        {:else if newMessage}
+          <Ping />
         {/if}
       </div>
     </button>
