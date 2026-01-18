@@ -16,7 +16,7 @@
     ...rest
   }: Props = $props()
 
-  const className = 'px-2 py-1 rounded outline-none text-sm font-semibold'
+  const className = 'px-2 py-1 rounded outline-none text-sm font-medium'
 
   const onClear = () => {
     value = ''

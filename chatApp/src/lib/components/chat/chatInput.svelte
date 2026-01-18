@@ -51,18 +51,16 @@
       bind:this={textArea}
       autocomplete="off"
       autofocus
-      class="w-full min-h-12 max-h-42 resize-none font-semibold field-sizing-content outline-0 min-w-0"
+      class="w-full min-h-12 max-h-42 resize-none field-sizing-content outline-0 min-w-0"
     ></textarea>
     <div class="w-full flex justify-between items-end">
       <div>
         {#if isAvailable === false}
-          <p class="text-xs dark:text-red-400 font-semibold text-red-500 mb-1">
+          <p class="text-xs dark:text-red-400 text-red-500 mb-1">
             This agent is currently unavailable.
           </p>
         {:else if isAvailable === undefined}
-          <p
-            class="text-xs dark:text-neutral-600 font-semibold text-neutral-300 mb-1"
-          >
+          <p class="text-xs dark:text-neutral-600 text-neutral-300 mb-1">
             Checking agent availability...
           </p>
         {/if}

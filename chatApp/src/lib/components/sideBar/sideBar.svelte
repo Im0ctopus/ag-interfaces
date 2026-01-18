@@ -83,7 +83,7 @@
       : 'max-w-0'}"
   >
     <div class="flex flex-col justify-start items-center gap-3 w-64 pt-4 px-3">
-      <p class="px-7.5 w-full text-center text-xl font-semibold">Agents</p>
+      <p class="px-7.5 w-full text-center text-xl">Agents</p>
       <Input variant="search" bind:value={search} />
       <AgentList {onSelect} {search} {selected} {agents} {agentStatus} />
     </div>

@@ -24,7 +24,7 @@
   {#each showAgents as { id, name, newMessage }, index (index)}
     <button
       onclick={() => onSelect(id, newMessage)}
-      class="w-full rounded px-3.5 pr-8.5 relative py-2.5 text-start text-sm font-semibold transition-all duration-150 ease-out truncate {selected ===
+      class="w-full rounded px-3.5 pr-8.5 relative py-2.5 text-start text-sm font-medium transition-all duration-150 ease-out truncate {selected ===
       id
         ? 'bg-neutral-800 text-neutral-100 dark:text-neutral-800 dark:bg-neutral-100'
         : 'cursor-pointer hover:bg-white dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 active:scale-98'}"
