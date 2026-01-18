@@ -7,6 +7,7 @@
     getAgentMessages,
     setAgentMessages,
   } from '$lib/utils/locaStorageHandler'
+  import MessageList from './messageList.svelte'
 
   type Props = {
     selected: string | null
@@ -122,17 +123,7 @@
 </script>
 
 <div class="w-full mx-auto h-full flex flex-col justify-center items-center">
-  <div class="overflow-x-clip overflow-y-scroll w-full grow">
-    <div
-      class="grow min-h-0 py-2 px-4 md:max-w-4xl w-full mx-auto pb-10 flex flex-col justify-center items-start gap-1"
-    >
-      {#each showMessages as { content, role }}
-        <p>{content}/{role}</p>
-        <div class="w-full"></div>
-      {/each}
-    </div>
-    <!-- TODO: messages list -->
-  </div>
+  <MessageList {showMessages} />
   <div class="shrink-0 w-full md:max-w-4xl px-2">
     <ChatInput {onSend} {isAvailable} bind:isLoading />
   </div>

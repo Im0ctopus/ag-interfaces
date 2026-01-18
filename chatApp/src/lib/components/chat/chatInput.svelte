@@ -45,6 +45,7 @@
   >
     <!-- svelte-ignore a11y_autofocus -->
     <textarea
+      name="agentInput"
       onkeydown={onKeyDown}
       bind:value
       placeholder="Type your message here..."
