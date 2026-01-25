@@ -38,7 +38,7 @@
     if (!browser) return
     const agent: string = localStorage.agent
     if (!agents.find((a) => a.id === agent)) {
-      agents[0].id
+      selected = agents[0].id
       console.error('Saved agent not found in agents list')
     } else selected = agent
   })
