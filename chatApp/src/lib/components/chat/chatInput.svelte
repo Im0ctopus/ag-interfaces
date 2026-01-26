@@ -6,9 +6,10 @@
     onSend: (value: string) => void
     isAvailable: boolean | undefined
     isLoading: boolean
+    breakAgentResponse: () => void
   }
 
-  let { onSend, isAvailable, isLoading = $bindable() }: Props = $props()
+  let { onSend, isAvailable, isLoading, breakAgentResponse }: Props = $props()
 
   let value = $state('')
 
@@ -18,7 +19,8 @@
 
   const onSendClick = (e: MouseEvent) => {
     e.stopPropagation()
-    if (isLoading) isLoading = false
+    // TODO: this needs to call a function
+    if (isLoading) breakAgentResponse()
     else {
       onSend(value.trim())
       value = ''

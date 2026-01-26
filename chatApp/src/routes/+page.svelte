@@ -1,8 +1,13 @@
 <script lang="ts" module>
-  export type Agent = {
+  export type Agent = BasicAgent & {
+    newMessage: boolean
+    status: 'loading' | 'writing' | null
+    action: string | null
+  }
+
+  type BasicAgent = {
     id: string
     name: string
-    newMessage: boolean
   }
 </script>
 
@@ -17,7 +22,12 @@
   let agentStatus: string[] | null | undefined = $state() //undefined is loading & null is when the runner is down
   let selected: string | null = $state(null)
   let agents: Agent[] = $state(
-    JSON.parse(PUBLIC_AGENTS).map((a: any) => ({ ...a, new: false })),
+    (JSON.parse(PUBLIC_AGENTS) as BasicAgent[]).map((a) => ({
+      ...a,
+      newMessage: false,
+      status: null,
+      action: null,
+    })),
   )
 
   $effect(() => {
@@ -48,16 +58,30 @@
     localStorage.sideBar = isSideOpen
   }
 
-  const newUnreadMessage = (agentId: string) => {
-    const agentToUpdate = agents.findIndex((a) => a.id === agentId)
-    if (agentToUpdate === -1) return
-    agents[agentToUpdate].newMessage = true
-  }
-
   const markAsRead = (agentId: string) => {
     const agentToUpdate = agents.findIndex((a) => a.id === agentId)
     if (agentToUpdate === -1) return
     agents[agentToUpdate].newMessage = false
+  }
+
+  const updateAgentStatus = (
+    id: string,
+    agentStatus: {
+      newMessage?: boolean
+      status?: 'loading' | 'writing' | null
+      action?: string | null
+    },
+  ) => {
+    const agentToUpdate = agents.findIndex((a) => a.id === id)
+    if (agentToUpdate === -1) return
+    const agent = { ...agents[agentToUpdate] }
+
+    const { newMessage, status, action } = agentStatus
+    if (newMessage !== undefined) agent.newMessage = newMessage
+    if (status !== undefined) agent.status = status
+    if (action !== undefined) agent.action = action
+
+    agents[agentToUpdate] = agent
   }
 </script>
 
@@ -80,7 +104,8 @@
       isAvailable={agentStatus === undefined
         ? undefined
         : agentStatus?.includes(selected || '') || false}
-      {newUnreadMessage}
+      {updateAgentStatus}
+      status={agents.find((a) => a.id === selected)?.status || null}
     />
   </div>
 </div>

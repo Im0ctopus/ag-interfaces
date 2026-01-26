@@ -12,14 +12,20 @@
   type Props = {
     selected: string | null
     isAvailable: boolean | undefined
-    newUnreadMessage: (agentId: string) => void
+    status: 'loading' | 'writing' | null
+    updateAgentStatus: (
+      id: string,
+      agentStatus: {
+        newMessage?: boolean
+        status?: 'loading' | 'writing' | null
+        action?: string | null
+      },
+    ) => void
   }
 
-  let { isAvailable, selected, newUnreadMessage }: Props = $props()
+  let { isAvailable, selected, updateAgentStatus, status }: Props = $props()
 
   let messageList: { [key: string]: Message[] } = $state({})
-  let isLoading: boolean = $state(false)
-  let isResponding: boolean = $state(false)
   let error: string | null = $state(null)
 
   let showMessages: Message[] = $derived(!selected ? [] : messageList[selected])
@@ -37,7 +43,7 @@
     const agentId = selected
     try {
       error = null
-      isLoading = true
+      updateAgentStatus(agentId, { status: 'loading' })
 
       if (!messageList[agentId]) messageList[agentId] = []
 
@@ -77,7 +83,10 @@
 
       while (true) {
         const { done, value } = await reader.read()
-        if (done || !isLoading) break
+        if (done || status === null) {
+          updateAgentStatus(agentId, { action: null })
+          break
+        }
 
         buffer += decoder.decode(value, { stream: true })
         const lines = buffer.split('\n\n')
@@ -94,9 +103,15 @@
             const finishReason = data.finishReason as string | undefined
 
             if (message) {
-              isResponding = true
-              if (agentId !== selected && !isResponding)
-                newUnreadMessage(agentId)
+              if (status === 'loading') {
+                const newStatus = {
+                  status: 'writing' as const,
+                  newMessage: false,
+                }
+
+                if (agentId !== selected) newStatus.newMessage = true
+                updateAgentStatus(agentId, newStatus)
+              }
 
               messageList[agentId][newId].content += message
             }
@@ -107,24 +122,43 @@
           }
         }
       }
+      const newStatus = {
+        status: null,
+        action: null,
+        newMessage: false,
+      }
 
-      if (agentId !== selected) newUnreadMessage(agentId)
+      if (agentId !== selected) newStatus.newMessage = true
 
-      isLoading = false
-      isResponding = false
+      updateAgentStatus(agentId, newStatus)
+
       setAgentMessages(messageList)
     } catch (e) {
+      updateAgentStatus(agentId, {
+        status: null,
+        action: null,
+        newMessage: false,
+      })
       console.error(e)
-      error = 'An error occurred, please try again.'
-    } finally {
-      isResponding = false
+      // TODO: this needs to show something to the user
     }
+  }
+
+  const breakAgentResponse = () => {
+    if (!selected) return
+    updateAgentStatus(selected, { status: null })
   }
 </script>
 
 <div class="w-full mx-auto h-full flex flex-col justify-center items-center">
   <MessageList {showMessages} />
   <div class="shrink-0 w-full md:max-w-4xl px-2">
-    <ChatInput {onSend} {isAvailable} bind:isLoading />
+    <!-- FIXME: This needs to have the actual loading -->
+    <ChatInput
+      {onSend}
+      {isAvailable}
+      isLoading={!!status}
+      {breakAgentResponse}
+    />
   </div>
 </div>

@@ -8,7 +8,7 @@
   const toggleOpen = () => (isOpen = !isOpen)
 </script>
 
-<div class="absolute top-3.5 right-3">
+<div class="absolute top-3.5 right-5">
   <div class="relative">
     <Button variant="icon" onclick={toggleOpen}>
       <Settings2 size="1.25rem" />
