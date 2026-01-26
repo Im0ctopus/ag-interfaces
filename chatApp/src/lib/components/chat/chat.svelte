@@ -8,11 +8,12 @@
     setAgentMessages,
   } from '$lib/utils/locaStorageHandler'
   import MessageList from './messageList.svelte'
+  import { type Agent } from '../../../routes/+page.svelte'
 
   type Props = {
     selected: string | null
     isAvailable: boolean | undefined
-    status: 'loading' | 'writing' | null
+    agents: Agent[]
     updateAgentStatus: (
       id: string,
       agentStatus: {
@@ -23,11 +24,14 @@
     ) => void
   }
 
-  let { isAvailable, selected, updateAgentStatus, status }: Props = $props()
+  let { isAvailable, selected, updateAgentStatus, agents }: Props = $props()
 
   let messageList: { [key: string]: Message[] } = $state({})
   let error: string | null = $state(null)
 
+  let selectedStatus = $derived(
+    agents.find((a) => a.id === selected)?.status || null,
+  )
   let showMessages: Message[] = $derived(!selected ? [] : messageList[selected])
 
   $effect(() => {
@@ -83,7 +87,7 @@
 
       while (true) {
         const { done, value } = await reader.read()
-        if (done || status === null) {
+        if (done || agents.find((a) => a.id === agentId)?.status === null) {
           updateAgentStatus(agentId, { action: null })
           break
         }
@@ -103,7 +107,7 @@
             const finishReason = data.finishReason as string | undefined
 
             if (message) {
-              if (status === 'loading') {
+              if (agents.find((a) => a.id === agentId)?.status === 'loading') {
                 const newStatus = {
                   status: 'writing' as const,
                   newMessage: false,
@@ -157,7 +161,7 @@
     <ChatInput
       {onSend}
       {isAvailable}
-      isLoading={!!status}
+      isLoading={!!selectedStatus}
       {breakAgentResponse}
     />
   </div>

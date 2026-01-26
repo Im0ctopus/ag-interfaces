@@ -105,7 +105,7 @@
         ? undefined
         : agentStatus?.includes(selected || '') || false}
       {updateAgentStatus}
-      status={agents.find((a) => a.id === selected)?.status || null}
+      {agents}
     />
   </div>
 </div>
