@@ -34,6 +34,10 @@
   )
   let showMessages: Message[] = $derived(!selected ? [] : messageList[selected])
 
+  let selectedAction = $derived(
+    agents.find((a) => a.id === selected)?.action || null,
+  )
+
   $effect(() => {
     if (!browser) return
 
@@ -106,10 +110,13 @@
             const message = data.message as string | undefined
             const finishReason = data.finishReason as string | undefined
 
-            if (message) {
+            if (action) {
+              updateAgentStatus(agentId, { action })
+            } else if (message) {
               if (agents.find((a) => a.id === agentId)?.status === 'loading') {
                 const newStatus = {
                   status: 'writing' as const,
+                  action: null,
                   newMessage: false,
                 }
 
@@ -155,7 +162,7 @@
 </script>
 
 <div class="w-full mx-auto h-full flex flex-col justify-center items-center">
-  <MessageList {showMessages} />
+  <MessageList {showMessages} status={selectedStatus} action={selectedAction} />
   <div class="shrink-0 w-full md:max-w-4xl px-2">
     <!-- FIXME: This needs to have the actual loading -->
     <ChatInput

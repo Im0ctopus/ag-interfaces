@@ -4,9 +4,11 @@
 
   type Props = {
     showMessages: Message[]
+    status: 'loading' | 'writing' | null
+    action: string | null
   }
 
-  let { showMessages }: Props = $props()
+  let { showMessages, status, action }: Props = $props()
 
   let scrollToSpan: HTMLElement
 
@@ -52,18 +54,6 @@
           ? 'justify-end'
           : 'justify-start'}"
       >
-        <!-- {#if status === 'loading' && !action}
-          <div class="flex justify-center items-center gap-1.5">
-            {#each new Array(3) as _, index (index)}
-              <div
-                style="animation: bounce 1s infinite {index * 150}ms;"
-                class="animate-loading-bounce rounded-full w-2 h-2 bg-neutral-200 dark:bg-neutral-600/70 mb-7"
-              ></div>
-            {/each}
-          </div>
-        {:else if status === 'loading'} -->
-        <!-- TODO: show action -->
-        <!-- {:else} -->
         <p
           class="w-fit whitespace-pre-line break-all rounded p-2.5 {role ===
           'user'
@@ -72,9 +62,30 @@
         >
           {content}
         </p>
-        <!-- {/if} -->
       </div>
     {/each}
+
+    {#if status === 'loading' && action}
+      <div
+        class="w-full flex items-center justify-start bg-clip-text bg-linear-to-r from-25% via-50% to-75% from-neutral-400 dark:from-neutral-500 via-neutral-300 dark:via-neutral-400 to-neutral-400 dark:to-neutral-500 bg-size-[150px] animate-actions"
+      >
+        <p
+          class="w-fit font-semibold bg-clip-text text-transparent text-sm whitespace-pre-line break-all pt-1 pb-5 max-w-11/12"
+        >
+          {action}
+        </p>
+      </div>
+    {:else if status === 'loading'}
+      <div class="w-full flex items-end justify-start gap-1.5 py-5 px-4">
+        {#each new Array(3) as _, index (index)}
+          <div
+            style="animation: dots 1s infinite {index *
+              150}ms, actions 2s linear infinite {index * 150}ms;"
+            class="rounded-full w-2 h-2 bg-linear-to-r from-25% via-50% to-75% from-neutral-400 dark:from-neutral-500 via-neutral-300 dark:via-neutral-400 to-neutral-400 dark:to-neutral-500 bg-size-[150px] animate-actions"
+          ></div>
+        {/each}
+      </div>
+    {/if}
     <span class="absolute bottom-4" bind:this={scrollToSpan}></span>
   </div>
 </div>
