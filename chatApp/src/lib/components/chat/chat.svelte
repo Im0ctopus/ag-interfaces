@@ -9,6 +9,7 @@
   } from '$lib/utils/locaStorageHandler'
   import MessageList from './messageList.svelte'
   import { type Agent } from '../../../routes/+page.svelte'
+  import type { StreamResponse } from '$lib/types/streamResponse'
 
   type Props = {
     selected: string | null
@@ -26,7 +27,9 @@
 
   let { isAvailable, selected, updateAgentStatus, agents }: Props = $props()
 
-  let messageList: { [key: string]: Message[] } = $state({})
+  let messageList: Record<string, Message[]> = $state({})
+  // TODO: remove this:
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let error: string | null = $state(null)
 
   let selectedStatus = $derived(
@@ -105,10 +108,16 @@
           const res = line.slice(6)
 
           try {
-            const data = JSON.parse(res)
-            const action = data.action as string | undefined
-            const message = data.message as string | undefined
-            const finishReason = data.finishReason as string | undefined
+            const {
+              action,
+              detailedDurations,
+              finishReason,
+              message,
+              totalDuration,
+              usage,
+            }: StreamResponse = JSON.parse(res)
+
+            const currentMessage = messageList[agentId][newId]
 
             if (action) {
               updateAgentStatus(agentId, { action })
@@ -124,12 +133,23 @@
                 updateAgentStatus(agentId, newStatus)
               }
 
-              messageList[agentId][newId].content += message
+              currentMessage.content += message
             }
-            // TODO: show action on the frontend like the one from google
-            // TODO: verify if the finishing reason is ERROR
+
+            if (finishReason) {
+              // TODO: show action on the frontend like the one from google
+              // TODO: verify if the finishing reason is ERROR
+
+              if (totalDuration)
+                currentMessage.devDetails = {
+                  totalDuration,
+                  agentUsage: usage || null,
+                  detailedDuration: detailedDurations || null,
+                }
+            }
           } catch (e) {
             // This empty catch is intentional to avoid breaking the stream on JSON parse errors
+            console.error(e)
           }
         }
       }

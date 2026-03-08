@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Message } from '$lib/types/message'
   import { ChevronDown } from 'lucide-svelte'
+  import MessageDevStatus from './messageDevStatus.svelte'
 
   type Props = {
     showMessages: Message[]
@@ -48,11 +49,11 @@
   <div
     class="grow relative min-h-0 py-10 px-4 md:max-w-4xl w-full mx-auto flex flex-col justify-center items-start gap-7"
   >
-    {#each showMessages as { content, role, id } (id)}
+    {#each showMessages as { content, role, id, devDetails } (id)}
       <div
-        class="w-full flex items-center {role === 'user'
-          ? 'justify-end'
-          : 'justify-start'}"
+        class="w-full flex items-center flex-col {role === 'user'
+          ? 'items-end'
+          : 'items-start'}"
       >
         <p
           class="w-fit whitespace-pre-line break-all rounded p-2.5 {role ===
@@ -62,21 +63,25 @@
         >
           {content}
         </p>
+        {#if devDetails}
+          <MessageDevStatus {...devDetails} />
+        {/if}
       </div>
     {/each}
 
     {#if status === 'loading' && action}
       <div
-        class="w-full flex items-center justify-start bg-clip-text bg-linear-to-r from-25% via-50% to-75% from-neutral-400 dark:from-neutral-500 via-neutral-300 dark:via-neutral-400 to-neutral-400 dark:to-neutral-500 bg-size-[150px] animate-actions"
+        class="w-full -mt-8.5 flex items-center justify-start bg-clip-text bg-linear-to-r from-25% via-50% to-75% from-neutral-400 dark:from-neutral-500 via-neutral-300 dark:via-neutral-400 to-neutral-400 dark:to-neutral-500 bg-size-[150px] animate-actions"
       >
         <p
-          class="w-fit font-semibold bg-clip-text text-transparent text-sm whitespace-pre-line break-all pt-1 pb-5 max-w-11/12"
+          class="w-fit font-semibold bg-clip-text text-transparent text-sm whitespace-pre-line break-all px-2.5 pb-7 max-w-11/12"
         >
           {action}
         </p>
       </div>
     {:else if status === 'loading'}
       <div class="w-full flex items-end justify-start gap-1.5 py-5 px-4">
+        <!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
         {#each new Array(3) as _, index (index)}
           <div
             style="animation: dots 1s infinite {index *
